@@ -1,0 +1,11 @@
+name: cognitive-modeling
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - anaconda
+  - pip
+  - numpy
+  - cmdstanpy
+  - pytorch
+  - torchvision
