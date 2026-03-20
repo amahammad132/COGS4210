@@ -47,17 +47,24 @@ transformed parameters {
 model {
     // Priors
     // Your code here
+    
 
     // Likelihood
     for (n in 1:N) {
+
+        int j = id[n];
+        
         // Condition 1
         if (condition[n] == 1) {
             if (choice[n] == 1) {
                 // Your code here 
                 // Hint: use something like param[id[n]] 
-                // to index the person-specific parameters ;)
+                // to index the person-specific parameters ;
+
+                target += wiener_lpdf(y[n] | a[j], tau[j], beta[j], v[j, 1]);
             } else {
                 // Your code here
+                target += wiener_lpdf(y[n] | a[j], tau[j], 1 - beta[j], -v[j, 1]);
             }
         }
 
@@ -65,8 +72,10 @@ model {
         if (condition[n] == 2) {
             if (choice[n] == 1) {
                 // Your code here
+                target += wiener_lpdf(y[n] | a[j], tau[j], beta[j], v[j, 2]);
             } else {
                 // Your code here
+                target += wiener_lpdf(y[n] | a[j], tau[j], 1 - beta[j], -v[j, 2]);
             }
         }
     }
