@@ -34,7 +34,7 @@ model {
 generated quantities {
     // Fitting data
     vector[N] preds;
-    vector[N] y_hat;
+    array[N] int y_hat;
     for (n in 1:N) {
         preds[n] = bernoulli_logit_lpmf(y[n] | alpha + beta1 * x1[n] + beta2 * x2[n] + beta3 * x3[n]);
         y_hat[n] = bernoulli_logit_rng(alpha + beta1 * x1[n] + beta2 * x2[n] + beta3 * x3[n]);
@@ -42,7 +42,12 @@ generated quantities {
 
     // Excluded data
     vector[N_ex] preds_ex;
+    vector[N_ex] p_ex;
+    array[N_ex] int y_hat_ex;
     for (n in 1:N_ex) {
-        preds_ex[n] = bernoulli_logit_lpmf(y_ex[n] | alpha + beta1 * x1_ex[n] + beta2 * x2_ex[n] + beta3 * x3_ex[n]);
+        real lp_ex = alpha + beta1 * x1_ex[n] + beta2 * x2_ex[n] + beta3 * x3_ex[n];
+        preds_ex[n] = bernoulli_logit_lpmf(y_ex[n] | lp_ex);
+        p_ex[n] = inv_logit(lp_ex);
+        y_hat_ex[n] = bernoulli_logit_rng(p_ex[n]);
     }
 }
